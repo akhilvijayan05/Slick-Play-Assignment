@@ -2,16 +2,16 @@ package table
 
 import javax.inject.Inject
 
-import connectionProvider.{DBComponent, MySqlDBComponent}
+import connectionProvider.{DBComponent}
 import models.Employee
 
 /**
   * Created by knoldus on 14/3/17.
   */
-class EmployeeTable @Inject() (dBComponent: DBComponent){
+class EmployeeTable @Inject() (val dBComponent: DBComponent){
 
-  this:DBComponent =>
-  import driver.api._
+//  this:DBComponent =>
+  import dBComponent.driver.api._
   class EmployeeTable(tag: Tag) extends Table[Employee](tag, "employee") {
     val id: Rep[Int] = column[Int]("id", O.PrimaryKey)
     val name: Rep[String] = column[String]("name")

@@ -1,24 +1,30 @@
 package services
 
+import javax.inject.Inject
+
 import component.DependentComponent
 import models.Dependent
+
+import scala.concurrent.Future
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 /**
   * Created by knoldus on 14/3/17.
   */
-object Hello{
+class Hello @Inject() (dependentComponent:DependentComponent){
 
-   DependentComponent.create
-    val insertRes = DependentComponent.insert(Dependent(10, "akhil","friend",Some(23)))
-    val insertRes1 = DependentComponent.insert(Dependent(11, "nitin","friend",Some(22)))
+  def check(insertRes:Future[Int])={
+   dependentComponent.create
+
+
 
     val res = insertRes.map { res => s"$res row inserted" }.recover {
       case ex: Throwable => ex.getMessage
     }
-    res.map(println(_))
+    //res.map(println(_))
   //  val value=DependentComponent.truncate
   //  value.map(println(_))
-
-
-  Thread.sleep(10000)
+res
+  }
+  //Thread.sleep(10000)
 }

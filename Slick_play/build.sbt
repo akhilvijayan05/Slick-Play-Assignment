@@ -16,4 +16,7 @@ libraryDependencies ++= Seq(
   "org.postgresql" % "postgresql" % "9.4.1212",
   "mysql" % "mysql-connector-java" % "5.1.6"
 )
+libraryDependencies += "org.scoverage" % "scalac-scoverage-plugin_2.11" % "1.3.0"
+
+libraryDependencies += "com.h2database" % "h2" % "1.4.193"
 

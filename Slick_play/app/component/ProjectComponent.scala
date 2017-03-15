@@ -1,48 +1,48 @@
 package component
 
-import connectionProvider.{DBComponent, MySqlDBComponent}
+import javax.inject.Inject
+
+import connectionProvider.{DBComponent}
 import models.Project
-import table.ProjectTable
+import table.{EmployeeTable, ProjectTable}
 
 import scala.concurrent.Future
 
 /**
   * Created by knoldus on 14/3/17.
   */
-class ProjectComponent extends ProjectTable with MySqlDBComponent {
-  this: DBComponent =>
+class ProjectComponent @Inject() (val projectTable: ProjectTable,val dBComponent:DBComponent){
+  //this: DBComponent =>
 
-  import driver.api._
+  import dBComponent.driver.api._
 
-  def create = db.run(projectTableQuery.schema.create)
+  def create = dBComponent.db.run(projectTable.projectTableQuery.schema.create)
 
-  def insert(project: Project) = db.run(projectTableQuery += project)
+  def insert(project: Project) = dBComponent.db.run(projectTable.projectTableQuery += project)
 
   def delete(empId: Int) = {
-    val query = projectTableQuery.filter(x => x.emp_id === empId)
+    val query = projectTable.projectTableQuery.filter(x => x.emp_id === empId)
     val action = query.delete
-    db.run(action)
+    dBComponent.db.run(action)
   }
 
   def updateName(id: Int, name: String): Future[Int] = {
-    val query = employeeTableQuery.filter(x => x.id === id)
+    val query = projectTable.projectTableQuery.filter(x => x.emp_id === id)
       .map(_.name).update(name)
-    db.run(query)
+    dBComponent.db.run(query)
   }
 
   def insertOrUpdate(project: Project) = {
-    val query = projectTableQuery.insertOrUpdate(project)
-    db.run(query)
+    val query = projectTable.projectTableQuery.insertOrUpdate(project)
+    dBComponent.db.run(query)
 
   }
   def getAll: Future[List[Project]] = {
-    db.run { projectTableQuery.to[List].result}
+    dBComponent.db.run { projectTable.projectTableQuery.to[List].result}
   }
   def truncate={
 
-    val action = projectTableQuery.delete
-    db.run(action)
+    val action = projectTable.projectTableQuery.delete
+    dBComponent.db.run(action)
   }
 }
-
-object ProjectComponent
